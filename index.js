@@ -6,6 +6,7 @@ app.get('/', (req, res) => {
   console.log("hi");
 })
 
-app.listen(process.eventNames.PORT || 3000, () => {
-  console.log(`Manhunt listening on port ${port}`)
+const port = process.eventNames.PORT || 3000
+app.listen(port, () => {
+  console.log(`Manhunt listening on port ${port}`);
 })
