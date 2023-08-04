@@ -56,7 +56,7 @@ function showPosition(position) {
 getLocation();
 setInterval(() => {
     updateText()
-}, 5000);
+}, 2000);
 
 async function updateText(){
     const url = "/huntee";
