@@ -35,7 +35,8 @@ setInterval(() => {
         id: player.id,
         lat: player.lat,
         lon: player.lon,
-        name: player.name
+        name: player.name,
+        lastUpdate: player.lastUpdate
       });
     }
   });
