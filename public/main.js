@@ -1,4 +1,4 @@
-//
+const socket = io();
 
 var maintext = document.getElementById("maintext");
 var checkbox = document.getElementById("cbox");
@@ -6,19 +6,20 @@ var checkbox = document.getElementById("cbox");
 var dummyLat = 43.8915;
 var dummyLong = -79.40246;
 
-var lat = 0;
-var lon = 0;
-
-var numUpdates = 0;
-
-var hunted = false;
+var lat = 0.0;
+var lon = 0.0;
 
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition, errorout);
+        navigator.geolocation.watchPosition(savePosition, errorout);
     } else {
       maintext.innerHTML = "Geolocation is not supported by this browser.";
     }
+}
+
+function savePosition(position) {
+  lat = position.coords.latitude;
+  lon = position.coords.longitude;
 }
 
 function errorout(error){
@@ -37,53 +38,28 @@ function errorout(error){
         break;
     }
   }
-    
-function showPosition(position) {
-    lat = position.coords.latitude;
-    lon = position.coords.longitude;
-
-    /*
-    x.innerHTML = "Latitude: " + position.coords.latitude +
-    "<br>Longitude: " + position.coords.longitude + 
-    "<br>Altitude: " + position.coords.altitude + 
-    "<br>Heading: " + position.coords.heading + 
-    "<br>Updates: " + numUpdates;*/
-    numUpdates += 1;
-}
 
 /////////////////////////////////////////////////////////////////////////////
 getLocation();
 setInterval(() => {
     update()
-}, 2000);
+}, 1000);
 
 async function update(){
-    //UPDATE THE DISTANCE TO HUNTEES
-    const url = "/huntee";
-    var data = await axios.get(url, {});
-    if(data.data.name == '') data.data.name = "Unnamed User";
-
-    maintext.innerHTML = "Distance to " + data.data.name + ": " + Math.round(getDistanceFromLatLonInKm(data.data.lat, data.data.lon, lat, lon) * 1000) + " m";
-
-    //SEND DISTANCE IF HUNTEE
-    if(checkbox.checked){
-      huntMe();
-    }
+    //send data
+    socket.emit("updatePlayer", {lat: lat, lon: lon, name: namebox.value, huntee: checkbox.checked});
 }
 
+//recieve data
+socket.on("hunteeData", data=>{
+  let str = `Current Huntees: ${data.length}`;
+  for(let i = 0; i < data.length; i ++){
+    str += "<br>";
+    str += `Distance to ${data[i].name}: ${Math.round(getDistanceFromLatLonInKm(lat, lon, data[i].lat, data[i].lon) * 1000)} m`;
+  }
 
-function huntMe(){
-    const url = "/huntme";
-    const data = {lat: lat, lon: lon, name: namebox.value}
-    axios.post(url, data);
-}
-
-
-
-
-
-
-
+  maintext.innerHTML = str;
+})
 
 ///////////////////////////////////////////////////////////////////////////////////util
 //https://stackoverflow.com/questions/18883601/function-to-calculate-distance-between-two-coordinates
