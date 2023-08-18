@@ -9,6 +9,7 @@ var dummyLong = -79.40246;
 var lat = 0.0;
 var lon = 0.0;
 
+
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(savePosition, errorout);
