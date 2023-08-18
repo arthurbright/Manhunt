@@ -1,8 +1,7 @@
 //
 
-var x = document.getElementById("textbox");
-var x2 = document.getElementById("textbox2");
-var namebox = document.getElementById("namebox");
+var maintext = document.getElementById("maintext");
+var checkbox = document.getElementById("cbox");
 
 var dummyLat = 43.8915;
 var dummyLong = -79.40246;
@@ -18,23 +17,23 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(showPosition, errorout);
     } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
+      maintext.innerHTML = "Geolocation is not supported by this browser.";
     }
 }
 
 function errorout(error){
     switch(error.code) {
       case error.PERMISSION_DENIED:
-        x.innerHTML = "User denied the request for Geolocation."
+        maintext.innerHTML = "User denied the request for Geolocation."
         break;
       case error.POSITION_UNAVAILABLE:
-        x.innerHTML = "Location information is unavailable."
+        maintext.innerHTML = "Location information is unavailable."
         break;
       case error.TIMEOUT:
-        x.innerHTML = "The request to get user location timed out."
+        maintext.innerHTML = "The request to get user location timed out."
         break;
       case error.UNKNOWN_ERROR:
-        x.innerHTML = "An unknown error occurred."
+        maintext.innerHTML = "An unknown error occurred."
         break;
     }
   }
@@ -55,15 +54,21 @@ function showPosition(position) {
 ////////////////////////////////////////////
 getLocation();
 setInterval(() => {
-    updateText()
+    update()
 }, 2000);
 
-async function updateText(){
+async function update(){
+    //UPDATE THE DISTANCE TO HUNTEES
     const url = "/huntee";
     var data = await axios.get(url, {});
     if(data.data.name == '') data.data.name = "Unnamed User";
 
-    x2.innerHTML = "Distance to " + data.data.name + ": " + getDistanceFromLatLonInKm(data.data.lat, data.data.lon, lat, lon) + " km";
+    maintext.innerHTML = "Distance to " + data.data.name + ": " + getDistanceFromLatLonInKm(data.data.lat, data.data.lon, lat, lon) + " km";
+
+    //SEND DISTANCE IF HUNTEE
+    if(checkbox.checked){
+      huntMe();
+    }
 }
 
 
