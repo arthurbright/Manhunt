@@ -51,7 +51,7 @@ function showPosition(position) {
     numUpdates += 1;
 }
 
-////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 getLocation();
 setInterval(() => {
     update()
@@ -63,7 +63,7 @@ async function update(){
     var data = await axios.get(url, {});
     if(data.data.name == '') data.data.name = "Unnamed User";
 
-    maintext.innerHTML = "Distance to " + data.data.name + ": " + getDistanceFromLatLonInKm(data.data.lat, data.data.lon, lat, lon) + " km";
+    maintext.innerHTML = "Distance to " + data.data.name + ": " + Math.round(getDistanceFromLatLonInKm(data.data.lat, data.data.lon, lat, lon) * 1000) + " m";
 
     //SEND DISTANCE IF HUNTEE
     if(checkbox.checked){
