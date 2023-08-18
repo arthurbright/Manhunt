@@ -57,7 +57,9 @@ socket.on("hunteeData", data=>{
   for(let i = 0; i < data.length; i ++){
     str += "<br>";
     str += `Distance to ${data[i].name}: ${Math.round(getDistanceFromLatLonInKm(lat, lon, data[i].lat, data[i].lon) * 1000)} m`;
-    str += ` (${Math.round((time - data[i].lastUpdate)/1000)} s ago)`
+    let delta = Math.round((time - data[i].lastUpdate)/100)/10;
+    if(delta < 0) delta = 0;
+    str += ` (${delta} s ago)`
   }
 
   maintext.innerHTML = str;
