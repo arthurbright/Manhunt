@@ -53,10 +53,11 @@ async function update(){
 //recieve data
 socket.on("hunteeData", data=>{
   let str = `Current Huntees: ${data.length}`;
+  let time = Date.now();
   for(let i = 0; i < data.length; i ++){
     str += "<br>";
     str += `Distance to ${data[i].name}: ${Math.round(getDistanceFromLatLonInKm(lat, lon, data[i].lat, data[i].lon) * 1000)} m`;
-    str += ` (${Math.round((Date.now() - data[i].lastUpdate)/1000)} s ago)`
+    str += ` (${Math.round((time - data[i].lastUpdate)/1000)} s ago)`
   }
 
   maintext.innerHTML = str;
